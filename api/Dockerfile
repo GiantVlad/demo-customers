@@ -8,7 +8,7 @@ ARG PHP_VERSION=8.1
 ARG CADDY_VERSION=2
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
+FROM php:${PHP_VERSION}-fpm-alpine AS api_customers_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -118,7 +118,7 @@ CMD ["php-fpm"]
 
 # "caddy" stage
 # depends on the "php" stage above
-FROM caddy:${CADDY_VERSION}-builder-alpine AS api_platform_caddy_builder
+FROM caddy:${CADDY_VERSION}-builder-alpine AS api_caddy_builder
 
 # install Mercure and Vulcain modules
 RUN xcaddy build \
@@ -127,10 +127,10 @@ RUN xcaddy build \
     --with github.com/dunglas/vulcain \
     --with github.com/dunglas/vulcain/caddy
 
-FROM caddy:${CADDY_VERSION} AS api_platform_caddy
+FROM caddy:${CADDY_VERSION} AS api_customers_caddy
 
 WORKDIR /srv/api
 
-COPY --from=api_platform_caddy_builder /usr/bin/caddy /usr/bin/caddy
-COPY --from=api_platform_php /srv/api/public public/
+COPY --from=api_caddy_builder /usr/bin/caddy /usr/bin/caddy
+COPY --from=api_customers_php /srv/api/public public/
 COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile

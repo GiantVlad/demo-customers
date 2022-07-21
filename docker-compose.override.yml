@@ -9,14 +9,13 @@ services:
       # if you develop on Linux, you may use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
     environment:
-      APP_ENV: dev
-
-  pwa:
-    build:
-      context: ./pwa
-      target: api_platform_pwa_dev
-    volumes:
-      - ./pwa:/usr/src/pwa:rw,cached
+      APP_ENV: de
+#  pwa:
+#    build:
+#      context: ./pwa
+#      target: api_platform_pwa_dev
+#    volumes:
+#      - ./pwa:/usr/src/pwa:rw,cached
 
   caddy:
     volumes:

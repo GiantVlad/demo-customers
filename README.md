@@ -25,5 +25,9 @@ docker-compose up -d
 
 sudo lsof -i tcp:80 -s tcp:listen
 
+docker exec -ti demo-cust_php_1 sh
+
+bin/console doctrine:migrations:migrate
+
 ## Credits
 

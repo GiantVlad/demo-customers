@@ -116,16 +116,26 @@ ENV SYMFONY_PHPUNIT_VERSION=9
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
 
+FROM api_customers_php as api_customers_php_dev
+
+ARG XDEBUG_VERSION=3.1.3
+RUN set -eux; \
+ apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+ pecl install xdebug-$XDEBUG_VERSION; \
+ docker-php-ext-enable xdebug; \
+ apk del .build-deps
+
 # "caddy" stage
 # depends on the "php" stage above
 FROM caddy:${CADDY_VERSION}-builder-alpine AS api_caddy_builder
 
 # install Mercure and Vulcain modules
 RUN xcaddy build \
-    --with github.com/dunglas/mercure \
-    --with github.com/dunglas/mercure/caddy \
     --with github.com/dunglas/vulcain \
     --with github.com/dunglas/vulcain/caddy
+
+#    --with github.com/dunglas/mercure \
+#    --with github.com/dunglas/mercure/caddy \
 
 FROM caddy:${CADDY_VERSION} AS api_customers_caddy
 

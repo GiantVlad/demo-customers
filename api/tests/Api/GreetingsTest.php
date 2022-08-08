@@ -3,7 +3,7 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Greeting;
+use App\Entity\Contact;
 
 class GreetingsTest extends ApiTestCase
 {
@@ -15,8 +15,8 @@ class GreetingsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            '@context' => '/contexts/Greeting',
-            '@type' => 'Greeting',
+            '@context' => '/contexts/Contact',
+            '@type' => 'Contact',
             'name' => 'Kévin',
         ]);
     }

@@ -65,7 +65,13 @@ class CustomerController extends AbstractApiController
             type: Customer::class,
         ),
     )]
-    #[OA\RequestBody(request: "customer", required: true, content: new OA\JsonContent(title: 'change Customer', ref: new Model(type: Customer::class, groups: ['Default'])))]
+    #[OA\RequestBody(
+        request: "customer",
+        required: true,
+        content: new OA\JsonContent(
+            ref: new Model(type: Customer::class, groups: ['Default']),
+        )
+    )]
     #[ParamConverter('customer', converter: 'serializer_converter')]
     public function create(Customer $customer): JsonResponse
     {
@@ -86,7 +92,14 @@ class CustomerController extends AbstractApiController
             type: Customer::class,
         ),
     )]
-    #[OA\RequestBody(request: "newCustomer", required: true, content: new OA\JsonContent(ref: new Model(type: Customer::class, groups: ['Default']), schema: 'change Customer'))]
+    #[OA\RequestBody(
+        request: "newCustomer",
+        required: true,
+        content: new OA\JsonContent(
+            ref: new Model(type: Customer::class, groups: ['Default']),
+            schema: 'change Customer'
+        )
+    )]
     #[ParamConverter('newCustomer', converter: 'serializer_converter')]
     #[ParamConverter('customer', converter: 'doctrine.orm')]
     public function update(Customer $customer, Customer $newCustomer): JsonResponse

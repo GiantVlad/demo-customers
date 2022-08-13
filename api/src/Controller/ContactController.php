@@ -6,9 +6,12 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Entity\Customer;
+use App\Entity\Image;
 use App\Model\ImageUploadApiModel;
 use App\Repository\ContactRepository;
+use App\Repository\ImageRepository;
 use Aws\S3\S3Client;
+use Aws\Sdk;
 use Gedmo\Sluggable\Util\Urlizer;
 use JMS\Serializer\ContextFactory\SerializationContextFactoryInterface;
 use JMS\Serializer\Serializer;
@@ -32,6 +35,7 @@ class ContactController extends AbstractApiController
     public function __construct(
         private readonly ContactRepository $contactRepository,
         private readonly ValidatorInterface $validator,
+        private readonly ImageRepository $imageRepository,
         private readonly SerializationContextFactoryInterface $serializationContextFactory,
     ) {
     }
@@ -104,51 +108,23 @@ class ContactController extends AbstractApiController
             new OA\MediaType(
                 mediaType: "multipart/form-data",
                 schema: new OA\Schema(
-                    required: ['file', 'contact_id'],
+                    required: ['file'],
                     properties: [
                         new OA\Property(property: 'file', type: "string", format: "binary"),
-                        new OA\Property(property: 'contact_id', type: "integer")
                     ],
-                    type: "object"
+                    type: "object",
                 )
             ),
         ],
     )]
-    #[Route('/upload', name: 'upload', methods: [Request::METHOD_POST])]
-    public function upload(Request $request, S3Client $s3Client): JsonResponse
+    #[Route('/{contact}/image', name: 'upload-img', methods: [Request::METHOD_POST])]
+    #[ParamConverter('image', converter: 'serializer_converter')]
+    #[ParamConverter('contact', converter: 'doctrine.orm')]
+    public function upload(Image $image, Contact $contact): JsonResponse
     {
-        /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $request->files->get('file');
-        /** @var Contact $contact */
-        $contact = $this->contactRepository->find($request->get('contact_id'));
-//        $uploadModel = new ImageUploadApiModel();
-//        $uploadModel->setFile($uploadedFile);
-//        $uploadModel->setContact($contact);
-        $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
-        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $newFilename = Urlizer::urlize($originalFilename) . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
-        $uploadedFile->move(
-            $destination,
-            $newFilename
-        );
-
-        $contact->setImgUrl($newFilename);
+        $this->imageRepository->create($image);
+        $contact->setImage($image);
         $this->contactRepository->save();
-
-//        $violations = $this->validator->validate($uploadApiModel);
-//        if ($violations->count() > 0) {
-//            return $this->json($violations, 400);
-//        }
-        // dd($uploadApiModel);
-        if ($request->headers->get('Content-Type') === 'application/json') {
-            $uploadedFile = $request->getContent();
-//            $uploadApiModel = $serializer->deserialize(
-//                $request->getContent(),
-//                ImageUploadApiModel::class,
-//                'json'
-//            );
-        }
-
-        return $this->json($uploadModel);
+        return $this->okResponse($image);
     }
 }

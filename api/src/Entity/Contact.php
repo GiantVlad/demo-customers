@@ -55,10 +55,6 @@ class Contact implements IdentifiableInterface
     #[Serializer\Groups(['Default', 'createContact'])]
     public \DateTimeInterface $birthday;
 
-    #[ORM\Column(nullable: true)]
-    #[Serializer\Groups(['Default', 'createContact'])]
-    private ?string $imgUrl = null;
-
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\JoinColumn(name: "file_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
     #[Serializer\Groups(['get_contact'])]
@@ -104,11 +100,6 @@ class Contact implements IdentifiableInterface
         return $this->birthday;
     }
 
-    public function getImgUrl(): ?string
-    {
-        return $this->imgUrl;
-    }
-
     public function getCustomer(): ?Customer
     {
         return $this->customer;
@@ -117,13 +108,6 @@ class Contact implements IdentifiableInterface
     public function getOwner(): Customer
     {
         return $this->owner;
-    }
-
-    public function setImgUrl(?string $imgUrl): self
-    {
-        $this->imgUrl = $imgUrl;
-
-        return $this;
     }
 
     public function getImage(): ?Image

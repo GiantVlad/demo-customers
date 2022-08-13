@@ -49,13 +49,21 @@ services:
 ###< doctrine/doctrine-bundle ###
 
   localstack-core:
-    image: localstack/localstack:1.0.3
+    image: localstack/localstack:1.0.4
     environment:
-      - SERVICES=sqs,s3
-      - EDGE_PORT=4566
+      - SERVICES=s3
+      # - EDGE_PORT=4566
       - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+#      - AWS_ACCESS_KEY_ID=test
+#      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - ./.local_data/localstack:/var/lib/localstack
+      - ./aws:/docker-entrypoint-initaws.d
+      - '/var/run/docker.sock:/var/run/docker.sock'
     ports:
-      - 4566:4566
+      - "4566:4566"
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###

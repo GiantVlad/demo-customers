@@ -26,11 +26,6 @@ class Image implements UploadableInterface, IdentifiableInterface
     #[Serializer\Groups(['get_image'])]
     private ?string $fileName = null;
 
-    #[ORM\OneToOne(targetEntity: Contact::class, cascade: ["persist", "remove"], orphanRemoval: true)]
-    #[ORM\JoinColumn(name: "contact_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
-    #[Serializer\Groups(['get_image'])]
-    private ?Contact $contact;
-
     #[Vich\UploadableField(mapping: "image", fileNameProperty: "fileName")]
     #[Serializer\Exclude]
     private File $file;
@@ -69,15 +64,8 @@ class Image implements UploadableInterface, IdentifiableInterface
         return $this;
     }
 
-    public function getContact(): ?Contact
+    public function getFileUri(): ?string
     {
-        return $this->contact;
-    }
-
-    public function setContact(?Contact $contact): self
-    {
-        $this->contact = $contact;
-
-        return $this;
+        return $this->fileName;
     }
 }

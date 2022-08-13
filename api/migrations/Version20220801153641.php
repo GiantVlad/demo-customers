@@ -21,7 +21,7 @@ final class Version20220801153641 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE customers_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE customers (id INT NOT NULL, nick_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE customers (id INT NOT NULL, nick_name VARCHAR(100) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE contacts ADD customer_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE contacts ADD owner_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE contacts ALTER birthday TYPE DATE');

@@ -1,0 +1,11 @@
+App\Entity\Contact:
+    contact_{1..5}:
+        firstName: <name()>
+        lastName: <name()>
+        address: <address()>
+        phone: <phoneNumber()>
+        birthday: <(new DateTimeImmutable('2000-08-04 13:36:07.489379'))>
+        email: <email()>
+        owner: '@customer*'    
+            
+

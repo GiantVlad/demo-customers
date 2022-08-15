@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Entity\Image;
-use App\Model\ImageUploadApiModel;
 use App\Repository\ContactRepository;
 use App\Repository\ImageRepository;
 use JMS\Serializer\ContextFactory\SerializationContextFactoryInterface;

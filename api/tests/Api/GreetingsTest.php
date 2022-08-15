@@ -5,11 +5,11 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Contact;
 
-class GreetingsTest extends ApiTestCase
+class ContactControllerTest extends ApiTestCase
 {
     public function testCreateGreeting()
     {
-        $response = static::createClient()->request('POST', '/greetings', ['json' => [
+        $response = static::createClient()->request('GET', '/greetings', ['json' => [
             'name' => 'Kévin',
         ]]);
 

@@ -32,25 +32,8 @@ final class SerializerParamConverter implements ParamConverterInterface
         return (bool) $configuration->getClass();
     }
 
-    /**
-     * @psalm-template T
-     *
-     * @psalm-param class-string<T> $class
-     *
-     * @psalm-return T
-     */
     private function getValue(Request $request, string $class): object
     {
-        $entity = $this->jsonRequestDeserializer->deserialize($request, $class);
-//        if (is_string($request->getContent()) && $entity instanceof IdentifiableInterface) {
-//            $updateContext = (new UpdateContext())->setFields(
-//                array_keys(
-//                    json_decode($request->getContent(), true)
-//                )
-//            );
-//            $entity->setUpdateContext($updateContext);
-//        }
-
-        return $entity;
+        return $this->jsonRequestDeserializer->deserialize($request, $class);
     }
 }

@@ -104,7 +104,6 @@ abstract class AbstractApiController extends AbstractController
      */
     protected function getSerializer(): SerializerInterface
     {
-        /** @var SerializerInterface $serializer */
         return $this->container->get(SerializerInterface::class);
     }
 }

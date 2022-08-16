@@ -23,3 +23,23 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Request\ParamConverter\SerializerParamConverter:
+        tags:
+            - { name: 'request.param_converter', priority: false, converter: 'serializer_converter' }
+    
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    ct_file_store.s3:
+        class: Aws\S3\S3Client
+        factory: [ Aws\S3\S3Client, 'factory' ]
+        arguments:
+            -
+                version: 'latest'
+                region: "%env(AMAZON_S3_REGION)%"
+                bucket: "%env(AMAZON_S3_BUCKET_NAME)%"
+                endpoint: "%env(AMAZON_S3_ENDPOINT)%"
+                credentials: { key: '%env(AMAZON_S3_KEY)%', secret: '%env(AMAZON_S3_SECRET)%' }
+                use_path_style_endpoint: true
+
